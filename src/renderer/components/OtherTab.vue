@@ -52,6 +52,15 @@ export default {
                         ]
                     })
                 },
+                {
+                    title: 'Micros Credit Cost',
+                    open: () => editKvsGroupValues({
+                        title: 'Micros Credit Cost',
+                        keyLabel: 'Micro Name',
+                        valueLabel: 'Cost',
+                        kvsGroup: 'micros_credit_costs',
+                    })
+                },
             ]
         }
     },
@@ -88,6 +97,7 @@ export default {
         display: grid;
         grid-template-columns: repeat(3, calc((100% - 12px) / 3));
         grid-column-gap: 6px;
+        grid-row-gap: 6px;
     }
 }
 </style>
