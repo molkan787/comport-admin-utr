@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "zlib1-wrapper/1.0.0": {
+        "runtime": {
+          "zlib1-wrapper.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "zlib1-wrapper/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
