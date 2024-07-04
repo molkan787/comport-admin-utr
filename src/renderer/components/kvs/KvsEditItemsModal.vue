@@ -19,7 +19,7 @@
                         <v-icon>mdi-trash-can</v-icon>
                     </v-btn>
                 </div>
-                <template v-if="items && items.length > 0">
+                <template v-if="sortedItems && sortedItems.length > 0">
                     <div class="item" v-for="(item, index) in items" :key="index">
                         <v-text-field v-model.trim="item.key" outlined dense hide-details :placeholder="keyLabel" />
                         <template v-if="valueSubProps">
@@ -66,8 +66,18 @@ export default {
         valueLabel: '',
         kvsGroup: '',
         valueSubProps: null,
-        items: []
+        items: [],
+        sort: '',
     }),
+    computed: {
+        sortedItems(){
+            if(this.sort === 'key'){
+                return this.items.sort((a, b) => a.key.localeCompare(b.key))
+            }else{
+                return this.items
+            }
+        }
+    },
     methods: {
         async okClick(){
             this.saving = true
@@ -114,6 +124,7 @@ export default {
             this.valueSubProps = o.valueSubProps || null
             this.loading = true
             this.open = true
+            this.sort = o.sort
             this.loadItems().then(() => this.loading = false)
         },
         async loadItems(){

@@ -59,6 +59,7 @@ export default {
                         keyLabel: 'Micro Name',
                         valueLabel: 'Cost',
                         kvsGroup: 'micros_credit_costs',
+                        sort: 'key'
                     })
                 },
             ]
