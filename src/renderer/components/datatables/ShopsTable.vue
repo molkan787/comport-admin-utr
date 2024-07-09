@@ -45,6 +45,7 @@ export default {
         { text: "Name", value: "shop" },
         { text: "Email", value: "email" },
         { text: "Last login", value: "last_login" },
+        { text: "Credit", value: "credit" },
         { text: "Actions", value: "actions", align: 'end', sortable: false },
       ],
       items: [],
