@@ -28,6 +28,7 @@ export default {
         headers: [
             { text: "Name", value: "name" },
             { text: "File Size", value: "length" },
+            { text: "Upload Date", value: "uploadDate" },
             { text: "Actions", value: "actions", align: 'end' },
             { text: "", value: "sort", sortable: false },
         ],
@@ -184,8 +185,10 @@ export default {
         },
         async loadFiles(){
             const files = await FolderService.getFiles(this.data.name)
-            console.log(files)
-            files.forEach(f => f._id = f._id.toString())
+            files.forEach(f => {
+                f._id = f._id.toString()
+                f.uploadDate = f.uploadDate.toLocaleString()
+            })
             this.items = files
         }
     },

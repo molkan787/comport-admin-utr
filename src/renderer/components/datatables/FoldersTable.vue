@@ -47,6 +47,7 @@ export default {
       loading: false,
       headers: [
         { text: "Name", value: "name" },
+        { text: "Last Upload Data", value: "lastUploadDate" },
         { text: "Actions", value: "actions", align: 'end', sortable: false },
       ],
       items: [],
@@ -71,9 +72,17 @@ export default {
         const query = (this.searchInput || '').toLowerCase()
         const isDirectName = query.includes('@')
         let items = await (!!query && !isDirectName ? FolderService.search(query) : FolderService.getFolders());
+        
         if(isDirectName){
           items = items.filter(item => item.name.toLowerCase().includes(query))
         }
+        items.forEach(item => {
+          if(item.lastUploadDate){
+            item.lastUploadDate = item.lastUploadDate.toLocaleString()
+          }else{
+            return '--'
+          }
+        })
         this.items = items;
       } catch (error) {
         panic(error)

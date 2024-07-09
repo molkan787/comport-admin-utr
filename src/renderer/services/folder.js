@@ -20,6 +20,7 @@ export class FolderService{
 
     static async getFolders(){
         const folders = await FoldersCollection.find().toArray()
+        await this.PopulateLastUploadDate(folders)
         return folders
     }
 
@@ -83,12 +84,14 @@ export class FolderService{
         const docs = await FlashesBucket.find({
             'metadata.folderId': folderId
         }).toArray()
+        console.log(docs)
         const files = docs
             .sort((a, b) => numOrDefault(a.metadata.sortOrder, 100000) - numOrDefault(b.metadata.sortOrder, 100000))
             .map(d => ({
                 _id: d._id.toString(),
                 name: d.filename,
                 length: d.length,
+                uploadDate: d.uploadDate,
                 metadata: d.metadata
             }))
         return files
@@ -217,6 +220,21 @@ export class FolderService{
         }
 
         return matchingFolders
+    }
+
+    static async PopulateLastUploadDate(folders){
+        const docs = await FlashesCollection.aggregate([
+            { $match: { 'metadata.folderId': { $in: folders.map(f => f._id.toString()) } } },
+            { $sort: { uploadDate: 1 } },
+            { $group: { _id: "$metadata.folderId", lastUploadDate: { $last: '$uploadDate' } } }
+        ]).toArray()
+        console.log('docs:', docs)
+        const dates = arrayToMap(docs, d => d._id, d => d.lastUploadDate)
+        for(let i = 0; i < folders.length; i++){
+            const f = folders[i]
+            f.lastUploadDate = dates[f._id.toString()] || null
+        }
+        return docs
     }
 
     static async GetFolderIdByName(folderName){
