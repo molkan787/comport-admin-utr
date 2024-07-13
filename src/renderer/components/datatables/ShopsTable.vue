@@ -31,6 +31,7 @@ import { allPropsSearchFilter } from '../../helpers/allPropsSearchFilter'
 import { mapActions } from 'vuex'
 import ShopLogoFieldVue from '../shop-forms/ShopLogoField.vue';
 import ShopAllowedMicrosFieldVue from '../shop-forms/ShopAllowedMicrosField.vue';
+import ShopAllowedRefNumbersField from '../shop-forms/ShopAllowedRefNumbersField.vue';
 
 export default {
   props: {
@@ -64,6 +65,7 @@ export default {
               { label: "Credit", value: "credit", type: 'number' },
             ]
           },
+          { type: 'component', component: ShopAllowedRefNumbersField },
           { type: 'component', component: ShopAllowedMicrosFieldVue },
           {
             label: "Last login",
