@@ -228,7 +228,6 @@ export class FolderService{
             { $sort: { uploadDate: 1 } },
             { $group: { _id: "$metadata.folderId", lastUploadDate: { $last: '$uploadDate' } } }
         ]).toArray()
-        console.log('docs:', docs)
         const dates = arrayToMap(docs, d => d._id, d => d.lastUploadDate)
         for(let i = 0; i < folders.length; i++){
             const f = folders[i]
