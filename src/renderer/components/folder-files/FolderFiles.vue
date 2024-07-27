@@ -40,8 +40,22 @@ export default {
             ]
         },
         downloadState: {},
-        updateState: {}
+        updateState: {},
+        searchText: '',
     }),
+    computed: {
+        displayItems(){
+            if(this.searchText.trim()){
+                const s = this.searchText.trim().toLowerCase()
+                return this.items.filter(e => e.name.includes(s))
+            }else{
+                return this.items
+            }
+        },
+        inSearch(){
+            return this.searchText.trim().length > 0
+        }
+    },
     methods: {
         moveItem(item, direction){
             const currentIndex = this.items.indexOf(item)
@@ -207,11 +221,12 @@ export default {
                 <v-btn @click="uploadClick" :loading="uploading" elevation="0" style="float: right" small>Upload file</v-btn>
                 <v-btn @click="saveSortOrder" :loading="savingSortOrder" elevation="0"
                     style="float:right;margin-right:6px" small>Save order</v-btn>
+                <v-text-field v-model="searchText" label="Search Files" style="float:right;margin-right: 6px;" dense outlined hide-details />
             </h2>
             <v-data-table
                 :key="tableKey"
                 :headers="headers"
-                :items="items"
+                :items="displayItems"
                 :items-per-page.sync="itemsPerPage"
                 item-key="_id"
                 class="elevation-0" >
@@ -222,10 +237,10 @@ export default {
 
                 <template v-slot:[`item.sort`]="{ item }">
                     <div style="white-space:nowrap">
-                        <v-btn @click="moveItem(item, -1)" :disabled="savingSortOrder" title="Move up" elevation="0" icon small>
+                        <v-btn @click="moveItem(item, -1)" :disabled="savingSortOrder || inSearch" title="Move up" elevation="0" icon small>
                             <v-icon>mdi-arrow-up</v-icon>
                         </v-btn>
-                        <v-btn @click="moveItem(item, 1)" :disabled="savingSortOrder" title="Move down" elevation="0" icon small>
+                        <v-btn @click="moveItem(item, 1)" :disabled="savingSortOrder || inSearch" title="Move down" elevation="0" icon small>
                             <v-icon>mdi-arrow-down</v-icon>
                         </v-btn>
                     </div>
