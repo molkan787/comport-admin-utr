@@ -47,7 +47,7 @@ export default {
         displayItems(){
             if(this.searchText.trim()){
                 const s = this.searchText.trim().toLowerCase()
-                return this.items.filter(e => e.name.includes(s))
+                return this.items.filter(e => e.name.toLowerCase().includes(s))
             }else{
                 return this.items
             }
