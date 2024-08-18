@@ -4,7 +4,7 @@
       <v-card>
         <v-card-title class="headline">{{ title }}</v-card-title>
         <v-card-text>
-            <div class="text-wrapper">{{ text }}</div>
+            <div class="text-wrapper" :class="{ allowSelection }">{{ text }}</div>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -23,7 +23,8 @@ export default {
         title: '',
         text: '',
         okButtonText: 'OK',
-        cancelButtonText: 'Cancel'
+        cancelButtonText: 'Cancel',
+        allowSelection: false,
     }),
 
     methods: {
@@ -40,6 +41,7 @@ export default {
             const o = options || {};
             this.title = title;
             this.text = text;
+            this.allowSelection = !!o.allowSelection
             if(type == 'confirm'){
                 this.okButtonText = o.okButtonText || 'YES';
                 this.cancelButtonText = o.cancelButtonText || 'NO';
@@ -50,10 +52,10 @@ export default {
             this.open = true;
         },
 
-        alert(text, title){
+        alert(text, title, options){
             return new Promise(resolve => {
                 this.resolve = resolve;
-                this.handleRequest(title || 'Info', text, 'alert');
+                this.handleRequest(title || 'Info', text, 'alert', options);
             });
         },
         confirm(text, title, options){
@@ -65,7 +67,7 @@ export default {
     },
 
     created(){
-        window.alert = (text, title) => this.alert(text, title);
+        window.alert = (text, title, options) => this.alert(text, title, options);
         window.confirm = (text, title, options) => this.confirm(text, title, options);
     }
 }
@@ -74,5 +76,9 @@ export default {
 <style lang="scss" scoped>
 .text-wrapper{
     white-space: pre-wrap;
+    &.allowSelection{
+        user-select: text;
+        cursor: text;
+    }
 }
 </style>

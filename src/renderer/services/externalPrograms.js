@@ -1,5 +1,6 @@
-import { exec } from '../utils'
+import { deleteFile, exec, readBinFile } from '../utils'
 import { GetMyResourcesDirPath } from './pathsResolver'
+import temp from 'temp'
 
 export const EPActions = Object.freeze({
     Compress: 'compress',
@@ -47,6 +48,30 @@ export default class ExternalProgramsService{
             `"${targetChecksum}" --algorithm ${algorithm} --position ${patchOffset.toString()} --overwrite `
         )
         return await exec(cmd)
+    }
+
+    /**
+     * @typedef PartialCRCManipOptions
+     * @prop {'CRC32' | 'CRC32POSIX' | 'CRC16CCITT' | 'CRC16IBM'} algorithm
+     * @prop {string} inputFilename
+     * @prop {string} targetChecksum
+     * @prop {number} patchOffset
+     * 
+     * @param {PartialCRCManipOptions} options 
+     * @returns 
+     */
+    static async GetCRCManipCorrection(options){
+        const { algorithm, inputFilename, targetChecksum, patchOffset } = options
+        const outputFilename = temp.path()
+        const cmd = (
+            `"${this._progFile('crcmanip-cli.exe')}" patch "${inputFilename}" "${outputFilename}" ` +
+            `"${targetChecksum}" --algorithm ${algorithm} --position ${patchOffset.toString()} --overwrite `
+        )
+        await exec(cmd)
+        const outputData = await readBinFile(outputFilename)
+        const patch = outputData.slice(patchOffset, patchOffset + 4)
+        await deleteFile(outputFilename)
+        return patch.toString('hex')
     }
 
 

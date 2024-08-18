@@ -18,6 +18,7 @@
             <v-text-field v-model.trim="patchOffset" label="Patch Offset (Hex)" dense />
         </div>
         <v-btn @click="patchClick" :loading="loading">Patch file</v-btn>
+        <v-btn @click="testClick" :loading="loading">Test</v-btn>
     </div>
 </template>
 
@@ -54,6 +55,21 @@ export default {
                     outputFilename: this.output
                 })
                 alert('File successfully patched!', 'Success!')
+            } catch (error) {
+                panic(error)
+            }
+            this.loading = false
+        },
+        async testClick(){
+            try {
+                this.loading = true
+                const correction = await ExternalProgramsService.GetCRCManipCorrection({
+                    algorithm: this.algorithm,
+                    targetChecksum: this.targetChecksum,
+                    patchOffset: parseInt(this.patchOffset, 16),
+                    inputFilename: this.input,
+                })
+                alert(`Patch data: ${correction.toUpperCase()}`, 'Success!', { allowSelection: true })
             } catch (error) {
                 panic(error)
             }
