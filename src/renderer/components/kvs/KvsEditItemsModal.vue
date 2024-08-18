@@ -2,7 +2,14 @@
   <v-row justify="center">
     <v-dialog v-model="open" persistent max-width="800">
       <v-card>
-        <v-card-title class="headline">{{ title }}</v-card-title>
+        <v-card-title class="headline">
+            {{ title }}
+            <div style="text-align: right; flex: 1;">
+                <div style="width: 200px;display: inline-block;">
+                    <v-text-field v-model="searchText" outlined dense hide-details placeholder="Search" />
+                </div>
+            </div>
+        </v-card-title>
         <v-card-text>
             {{ text }}
             <div v-if="loading" class="loading-container">
@@ -20,7 +27,7 @@
                     </v-btn>
                 </div>
                 <template v-if="sortedItems && sortedItems.length > 0">
-                    <div class="item" v-for="(item, index) in items" :key="index">
+                    <div class="item" v-for="(item, index) in sortedItems" :key="index">
                         <v-text-field v-model.trim="item.key" outlined dense hide-details :placeholder="keyLabel" />
                         <template v-if="valueSubProps">
                             <v-text-field
@@ -40,12 +47,12 @@
             </div>
         </v-card-text>
         <v-card-actions>
-          <v-btn @click="addItemClick" color="blue darken-1" text>
+          <v-btn @click="addItemClick" :disabled="inSearch" color="blue darken-1" text>
               <v-icon>mdi-plus</v-icon> Add Item
           </v-btn>
           <v-spacer></v-spacer>
           <v-btn color="grey" text @click="cancelClick">Cancel / Close</v-btn>
-          <v-btn :loading="saving" color="blue darken-1" text @click="okClick">Save</v-btn>
+          <v-btn :loading="saving" :disabled="inSearch" color="blue darken-1" text @click="okClick">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -68,11 +75,36 @@ export default {
         valueSubProps: null,
         items: [],
         sort: '',
+        searchText: '',
     }),
     computed: {
         sortedItems(){
+            const items = this.displayedItems
             if(this.sort === 'key'){
-                return this.items.sort((a, b) => a.key.localeCompare(b.key))
+                return items.sort((a, b) => a.key.localeCompare(b.key))
+            }else{
+                return items
+            }
+        },
+        inSearch(){
+            return  this.searchText.trim().length > 0
+        },
+        displayedItems(){
+            const s = this.searchText.trim().toLowerCase()
+            if(s.length > 0){
+                const result = []
+                for(let i = 0; i < this.items.length; i++){
+                    const item = this.items[i]
+                    const kTxt = item.key.toString().toLowerCase()
+                    let vTxt = item.value
+                    if(typeof vTxt === 'object') vTxt = JSON.stringify(vTxt)
+                    vTxt = vTxt.toString().toLowerCase()
+                    if(kTxt.includes(s) || vTxt.includes(s)){
+                        result.push(item)
+                    }
+                }
+                console.log(result)
+                return result
             }else{
                 return this.items
             }
