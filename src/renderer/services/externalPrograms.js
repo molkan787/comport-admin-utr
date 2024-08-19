@@ -145,6 +145,15 @@ export default class ExternalProgramsService{
     static async ikvmc(inputJarFilename, outputDllFilename){
         return await exec(`"${this._progFile('ikvm-7.2.4630.5/bin/ikvmc.exe')}" "${inputJarFilename}" -out:"${outputDllFilename}"`)
     }
+    
+
+    /**
+     * @param {(string | number)[]} args 
+     */
+    static async DLLSeedKeyClient(args){
+        const cmd = `"${this._progFile("Comport_SeedKeyDLL_Client.exe")}" ${this.encodeArgs(args)}`
+        return await exec(cmd)
+    }
 
     // ----------- internal helpers -----------
 
@@ -154,6 +163,19 @@ export default class ExternalProgramsService{
 
     static get _python(){
         return process.platform === 'win32' ? 'python' : 'python3'
+    }
+
+    static encodeArgs(args){
+        return args.map(a => {
+            let _a = (a || '').toString()
+            if(_a.includes(' ') && !(_a.startsWith('"') && _a.endsWith('"'))){
+                return `"${_a}"`
+            }else{
+                return _a
+            }
+        })
+        .filter(a => a.length > 0)
+        .join(' ')
     }
 
 }

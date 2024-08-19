@@ -31,6 +31,7 @@ import { LZJBService } from '../../services/tools/lzjb'
 import { arrayToMap } from '../../utils'
 import ExternalProgramsService, { EPActions } from '../../services/externalPrograms'
 import IKVMConverterTool from './IKVMConverterTool.vue'
+import DLLSeedKey from './DLLSeedKey.vue'
 
 // TODO: Replace repeatitive componenets with shared templates (tempalate for compression already exist)
 
@@ -459,6 +460,11 @@ export default {
                     isPacker: true
                 },
                 category: 'file_tools'
+            },
+            {
+                title: 'DLL Seed-Key',
+                component: DLLSeedKey,
+                category: 'security_algos'
             },
         ]
     }),
