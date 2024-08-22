@@ -26,4 +26,12 @@ export class ComportDebugSerivce{
         )
     }
 
+    static async ArchiveAllExceptions(appName){
+        const exceptionsColl = coll('exceptions', appName)
+        await exceptionsColl.updateMany(
+            { Archived: false },
+            { $set: { Archived: true } }
+        )
+    }
+
 }

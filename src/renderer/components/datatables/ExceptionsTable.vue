@@ -1,16 +1,21 @@
 <script>
+import Teleport from 'vue2-teleport'
 import { allPropsSearchFilter } from '../../helpers/allPropsSearchFilter'
 import { ComportDebugSerivce } from '../../services/comportDebug'
 import ExceptionDetailsModal from '../comport-debug/ExceptionDetailsModal.vue'
 
 export default {
   components: {
-    ExceptionDetailsModal
+    ExceptionDetailsModal,
+    Teleport,
   },
   props: {
     searchInput: {
       type: String
-    }
+    },
+    activePage: {
+      type: Boolean,
+    },
   },
   data() {
     return {
@@ -23,6 +28,7 @@ export default {
         { text: "Actions", value: "actions", align: 'end', sortable: false },
       ],
       items: [],
+      archiving: false,
     };
   },
   methods: {
@@ -43,6 +49,19 @@ export default {
       if(window.devFunc === 'exception')
         this.viewDetails(this.items.find(ex => ex.ExceptionHeader === 'FlasherCore.ProcedureException: Test Error'))
     },
+    async archiveAllClick(){
+      if(await confirm('Archive all exceptions?')){
+        try {
+          this.archiving = true
+          await ComportDebugSerivce.ArchiveAllExceptions('flasher')
+          await this.loadItems()
+          await alert('All exceptions were successfully archived!')
+        } catch (error) {
+          panic(error)
+        }
+        this.archiving = false
+      }
+    },
     refresh(){
       return this.loadItems();
     },
@@ -58,6 +77,14 @@ export default {
 
 <template>
   <div class="exceptions-table">
+
+    <Teleport to="#header-extra-buttons">
+      <v-btn v-if="activePage" @click="archiveAllClick" text color="white">
+        <v-icon>mdi-archive</v-icon>
+        &nbsp; ARCHIVE ALL
+      </v-btn>
+    </Teleport>
+
     <v-data-table
       :search="searchInput"
       :headers="headers"

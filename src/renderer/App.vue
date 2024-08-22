@@ -4,6 +4,7 @@
       COMPORT ADMIN
       <v-spacer></v-spacer>
       <template v-if="loggedIn">
+        <div id="header-extra-buttons"></div>
         <v-btn v-if="showRefreshButton" :loading="refreshing" @click="refreshBtnClick" title="Refresh current tab" icon>
           <v-icon>mdi-refresh</v-icon>
         </v-btn>

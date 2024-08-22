@@ -174,7 +174,7 @@ export default {
             <v-tabs-items :value="tab" vertical>
                 <v-tab-item v-for="(item) in allItems" :key="item.key">
                     <div class="tab-page">
-                        <component :is="item.component" :ref="item.key" @navigateRequest="onNavigateRequest" :searchInput="searchInput" />
+                        <component :is="item.component" :ref="item.key" :activePage="item.key === currentKey" @navigateRequest="onNavigateRequest" :searchInput="searchInput" />
                     </div>
                 </v-tab-item>
             </v-tabs-items>
