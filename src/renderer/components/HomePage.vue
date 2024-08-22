@@ -147,7 +147,7 @@ export default {
                 </template>
                 <v-list>
                     <template v-for="item in items">
-                        <v-list-group v-if="item.childs" :value="false" :prepend-icon="item.icon" :key="item.key">
+                        <v-list-group v-if="item.childs" :value="false" :prepend-icon="item.icon" :key="item.key + 'group'">
                             <template v-slot:activator>
                                 <v-list-item-title>{{ (item.title || item.key).toUpperCase() }}</v-list-item-title>
                             </template>
