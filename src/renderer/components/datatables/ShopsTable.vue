@@ -32,6 +32,7 @@ import { mapActions } from 'vuex'
 import ShopLogoFieldVue from '../shop-forms/ShopLogoField.vue';
 import ShopAllowedMicrosFieldVue from '../shop-forms/ShopAllowedMicrosField.vue';
 import ShopAllowedRefNumbersField from '../shop-forms/ShopAllowedRefNumbersField.vue';
+import ShopCustomersField from '../shop-forms/ShopCustomersField.vue';
 
 export default {
   props: {
@@ -82,7 +83,8 @@ export default {
             label: "Last customer folder",
             value: "last_customer_folder",
             type: "display",
-          }
+          },
+          { type: 'component', component: ShopCustomersField },
         ]
       }
     };

@@ -1,5 +1,6 @@
 import Shell from '../shell'
 import store from '../store'
+import { CustomerService } from './customer'
 import { coll, ObjectId } from './db'
 import { GenericEntriesService } from './GenericEntries'
 
@@ -22,32 +23,29 @@ export class ShopService{
 
     static getShops(){
         return GenericEntriesService.GetEntries(this._groupName)
-        // return this.shopsCollection.find().toArray()
     }
 
     static saveShop(data, isNew){
         return GenericEntriesService.SaveEntry(this._groupName, data)
-        // if(isNew){
-        //     const result = await this.shopsCollection.insertOne(data)
-        //     return {
-        //         ...data,
-        //         _id: result.insertedId
-        //     }
-        // }else{
-        //     const { _id, ...rData } = data
-        //     await this.shopsCollection.updateOne(
-        //         { _id: ObjectId(_id) },
-        //         { $set: rData }
-        //     )
-        //     return data
-        // }
     }
 
     static deleteShop(data){
-        return GenericEntriesService.DeleteEntry(this._groupName, data._id)
-        // return this.shopsCollection.deleteOne({
-        //     _id: ObjectId(data._id)
-        // })
+    }
+
+    /**
+     * Fetch and return all customers that are assigned to selected shop's (shopId)
+     * @param {string} shopId 
+     */
+    static async getCustomers(shopId){
+        const customers = await CustomerService.customersCollection.find(
+            { shopId: shopId },
+            {
+                projection: {
+                    email: 1
+                }
+            }
+        ).toArray()
+        return customers
     }
 
 }
