@@ -41,7 +41,8 @@ export class ShopService{
             { shopId: shopId },
             {
                 projection: {
-                    email: 1
+                    email: 1,
+                    vin: 1,
                 }
             }
         ).toArray()
