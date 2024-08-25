@@ -32,6 +32,7 @@ import { arrayToMap } from '../../utils'
 import ExternalProgramsService, { EPActions } from '../../services/externalPrograms'
 import IKVMConverterTool from './IKVMConverterTool.vue'
 import DLLSeedKey from './DLLSeedKey.vue'
+import CRCHack from './CRCHack.vue'
 
 // TODO: Replace repeatitive componenets with shared templates (tempalate for compression already exist)
 
@@ -465,6 +466,11 @@ export default {
                 title: 'DLL Seed-Key',
                 component: DLLSeedKey,
                 category: 'security_algos'
+            },
+            {
+                title: 'CRC Hack',
+                component: CRCHack,
+                category: 'file_tools'
             },
         ]
     }),

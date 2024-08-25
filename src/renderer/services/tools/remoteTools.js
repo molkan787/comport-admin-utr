@@ -154,6 +154,40 @@ export class RemoteToolsService{
     }
 
     /**
+     * @typedef CRCHachOptions
+     * @prop {string} targetChecksum
+     * @prop {string?} position byte.bit position of mutable input bits
+     * @prop {string?} backwardPosition position offset from the end of the input
+     * @prop {string?} bits specify bits at positions l..r with step s
+     * @prop {string?} polynomial generator polynomial
+     * @prop {string?} initialRegister initial register value
+     * @prop {boolean?} reverseInput reverse input bytes
+     * @prop {string?} registerSize register size in bits
+     * @prop {string?} xorMask final register XOR mask
+     * @prop {boolean?} reverseFinal reverse final register
+     * 
+     * @param {string} inputFilename
+     * @param {string} outputFilename
+     * @param {CRCHachOptions} options 
+     */
+    static async CRCHack(inputFilename, outputFilename, options){
+        const qsParams = Object.assign({}, options)
+        if(!qsParams.reverseInput) delete qsParams.reverseInput
+        if(!qsParams.reverseFinal) delete qsParams.reverseFinal
+        const inputData = await readBinFile(inputFilename)
+        const { data } = await axios.post(this._url(`crchack`), inputData, {
+            params: qsParams,
+            headers: {
+                'content-type': 'application/octet-stream'
+            },
+            responseType: 'arraybuffer'
+        })
+        const dataBuffer = Buffer.from(data, 'binary')
+        await writeFile(outputFilename, dataBuffer)
+        return outputFilename
+    }
+
+    /**
      * @private
      * @param {string} toolName 
      * @returns {string}

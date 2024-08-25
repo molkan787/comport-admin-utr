@@ -7,6 +7,25 @@ export const EPActions = Object.freeze({
     Decompress: 'decompress'
 })
 
+function SanitizeHexSerie(seed){
+    return Buffer.from(seed.replace(/\s/g, ''), "hex").toString("hex")
+}
+
+function SanitizeHexNumber(num){
+    return parseInt(num.toString(), 16).toString(16)
+}
+
+function SanitizeNumber(num){
+    return parseInt(num.toString(), 10).toString(10)
+}
+
+function SanitizeFilePath(path){
+    if(path.includes('"')){
+        throw new Error('File path cannot includes double quotes.')
+    }
+    return `"${path}"`
+}
+
 export default class ExternalProgramsService{
 
     static async lzrb(action, inFilename, outFilename){
@@ -146,7 +165,6 @@ export default class ExternalProgramsService{
         return await exec(`"${this._progFile('ikvm-7.2.4630.5/bin/ikvmc.exe')}" "${inputJarFilename}" -out:"${outputDllFilename}"`)
     }
     
-
     /**
      * @param {(string | number)[]} args 
      */
