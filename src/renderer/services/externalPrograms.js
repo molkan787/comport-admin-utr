@@ -1,4 +1,4 @@
-import { deleteFile, exec, readBinFile } from '../utils'
+import { deleteFile, exec, isNoneEmptyString, isValidNumber, readBinFile } from '../utils'
 import { GetMyResourcesDirPath } from './pathsResolver'
 import temp from 'temp'
 
@@ -56,16 +56,19 @@ export default class ExternalProgramsService{
      * @prop {string} outputFilename
      * @prop {string} targetChecksum
      * @prop {number} patchOffset
+     * @prop {string?} polynomial
      * 
      * @param {CRCManipOptions} options 
      * @returns 
      */
     static async CRCManip(options){
-        const { algorithm, inputFilename, outputFilename, targetChecksum, patchOffset } = options
+        const { algorithm, inputFilename, outputFilename, targetChecksum, patchOffset, polynomial } = options
         const cmd = (
             `"${this._progFile('crcmanip-cli.exe')}" patch "${inputFilename}" "${outputFilename}" ` +
-            `"${targetChecksum}" --algorithm ${algorithm} --position ${patchOffset.toString()} --overwrite `
+            `"${targetChecksum}" --algorithm ${algorithm} --position ${patchOffset.toString()} --overwrite ` + 
+            (isNoneEmptyString(polynomial) ? `--polynomial ${polynomial}` : '')
         )
+        console.log(`cmd: "${cmd}"`)
         return await exec(cmd)
     }
 
@@ -75,16 +78,18 @@ export default class ExternalProgramsService{
      * @prop {string} inputFilename
      * @prop {string} targetChecksum
      * @prop {number} patchOffset
+     * @prop {string?} polynomial
      * 
      * @param {PartialCRCManipOptions} options 
      * @returns 
      */
     static async GetCRCManipCorrection(options){
-        const { algorithm, inputFilename, targetChecksum, patchOffset } = options
+        const { algorithm, inputFilename, targetChecksum, patchOffset, polynomial } = options
         const outputFilename = temp.path()
         const cmd = (
             `"${this._progFile('crcmanip-cli.exe')}" patch "${inputFilename}" "${outputFilename}" ` +
-            `"${targetChecksum}" --algorithm ${algorithm} --position ${patchOffset.toString()} --overwrite `
+            `"${targetChecksum}" --algorithm ${algorithm} --position ${patchOffset.toString()} --overwrite ` + 
+            (isNoneEmptyString(polynomial) ? `--polynomial ${polynomial}` : '')
         )
         await exec(cmd)
         const outputData = await readBinFile(outputFilename)

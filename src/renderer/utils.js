@@ -24,8 +24,16 @@ export function largePush(src, dest){
     return dest
 }
 
+export function isValidNumber(value){
+    return typeof value === 'number' && !isNaN(value) && value !== Infinity && value !== -Infinity
+}
+
 export function isDigit(char){
     return char !== '' && '0123456789'.includes(char)
+}
+
+export function isNoneEmptyString(value){
+    return typeof value === 'string' && value.trim().length > 0
 }
 
 export function timestamp(){

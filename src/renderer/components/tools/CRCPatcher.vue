@@ -15,7 +15,10 @@
             <v-text-field v-model.trim="targetChecksum" label="Target Checksum (Hex)" dense />
         </div>
         <div class="file-input">
-            <v-text-field v-model.trim="patchOffset" label="Patch Offset (Hex)" dense />
+            <v-text-field v-model.number="patchOffset" label="Patch Offset (Decimal)" dense />
+        </div>
+        <div class="file-input">
+            <v-text-field v-model.trim="polynomial" label="Polynomial (Hex) (Optional)" dense />
         </div>
         <v-btn @click="patchClick" :loading="loading">Patch file</v-btn>
         <v-btn @click="testClick" :loading="loading">Test</v-btn>
@@ -31,6 +34,7 @@ export default {
         loading: false,
         algorithm: 'CRC32',
         targetChecksum: '',
+        polynomial: '',
         patchOffset: 0,
         input: '',
         output: '',
@@ -50,7 +54,8 @@ export default {
                 await ExternalProgramsService.CRCManip({
                     algorithm: this.algorithm,
                     targetChecksum: this.targetChecksum,
-                    patchOffset: parseInt(this.patchOffset, 16),
+                    patchOffset: this.patchOffset,
+                    polynomial: this.polynomial,
                     inputFilename: this.input,
                     outputFilename: this.output
                 })
@@ -66,7 +71,8 @@ export default {
                 const correction = await ExternalProgramsService.GetCRCManipCorrection({
                     algorithm: this.algorithm,
                     targetChecksum: this.targetChecksum,
-                    patchOffset: parseInt(this.patchOffset, 16),
+                    patchOffset: this.patchOffset,
+                    polynomial: this.polynomial,
                     inputFilename: this.input,
                 })
                 alert(`Patch data: ${correction.toUpperCase()}`, 'Success!', { allowSelection: true })
