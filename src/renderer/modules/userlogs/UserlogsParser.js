@@ -3,6 +3,11 @@ export const MSG_TYPE = Object.freeze({
     RX: 'RX'
 })
 
+// Dictionary of `{TX id}: {RX id}`
+const RR_CHANNELS = {
+    0x607: 0x587,
+}
+
 export class UserlogsParser{
 
     /**
@@ -52,9 +57,21 @@ export class UserlogsParser{
         // TODO: (Maybe) Add checking for response status match
         const txId = txMsg.channelId
         const rxId = rxMsg.channelId
-        const m1 = txId[3] + 8 === rxId[3]
-        const m2 = txId[2] === rxId[2]
-        return m1 && m2
+        const numTxId = this._bytesArrayToNum(txId)
+        const expectedRxId = RR_CHANNELS[numTxId]
+        if(typeof expectedRxId === 'number'){ // Using defined dictionary
+            const numRxId = this._bytesArrayToNum(rxId)
+            return numRxId === expectedRxId
+        }else{ // Default check (some known channels have RX = TX + 8)
+            const m1 = txId[3] + 8 === rxId[3]
+            const m2 = txId[2] === rxId[2]
+            return m1 && m2
+        }
+        
+    }
+
+    static _bytesArrayToNum(bytes){
+        return parseInt(bytes.map(n => n.toString(16).padStart(2, '0')).join(''), 16)
     }
 
     static ParseMessages(items){

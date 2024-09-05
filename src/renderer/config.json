@@ -2,6 +2,6 @@
     "mongo_uri": "mongodb://localhost:27017/?tls=false",
     "apiBaseUrl": {
         "prod": "https://api.amrcomport.com:8086",
-        "dev": "https://api.amrcomport.com:9086"
+        "dev": "http://localhost:9085"
     }
 }
