@@ -1,3 +1,4 @@
+import { grabData } from '../helpers/text-kelpers'
 import { deleteFile, exec, isNoneEmptyString, isValidNumber, readBinFile } from '../utils'
 import { GetMyResourcesDirPath } from './pathsResolver'
 import temp from 'temp'
@@ -85,17 +86,14 @@ export default class ExternalProgramsService{
      */
     static async GetCRCManipCorrection(options){
         const { algorithm, inputFilename, targetChecksum, patchOffset, polynomial } = options
-        const outputFilename = temp.path()
         const cmd = (
-            `"${this._progFile('crcmanip-cli.exe')}" patch "${inputFilename}" "${outputFilename}" ` +
+            `"${this._progFile('crcmanip-cli.exe')}" computePatch "${inputFilename}" ` +
             `"${targetChecksum}" --algorithm ${algorithm} --position ${patchOffset.toString()} --overwrite ` + 
             (isNoneEmptyString(polynomial) ? `--polynomial ${polynomial}` : '')
         )
-        await exec(cmd)
-        const outputData = await readBinFile(outputFilename)
-        const patch = outputData.slice(patchOffset, patchOffset + 4)
-        await deleteFile(outputFilename)
-        return patch.toString('hex')
+        const output = await exec(cmd)
+        const patch = grabData(output, 'output_data:')
+        return patch
     }
 
 
