@@ -176,7 +176,9 @@ export class RemoteToolsService{
         if(!qsParams.reverseFinal) delete qsParams.reverseFinal
         const inputData = await readBinFile(inputFilename)
         const { data } = await axios.post(this._url(`crchack`), inputData, {
-            params: qsParams,
+            params: {
+                options: JSON.stringify(qsParams)
+            },
             headers: {
                 'content-type': 'application/octet-stream'
             },
