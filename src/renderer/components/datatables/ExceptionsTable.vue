@@ -35,11 +35,20 @@ export default {
     async viewDetails(item){
       try {
         this.loadingItem = item._id
-        window.openExceptionDetails(item, { reload: true })
+        window.openExceptionDetails(item, {
+          reload: true,
+          onDeleted: d => this._onDeletedHandler(d)
+        })
       } catch (error) {
         panic(error)
       }
       this.loadingItem = null
+    },
+    _onDeletedHandler(item){
+      const index = this.items.findIndex(d => d._id.toString() === item._id.toString())
+      if(index >= 0){
+        this.items.splice(index, 1)
+      }
     },
     async loadItems() {
       this.loading = true;
@@ -56,6 +65,19 @@ export default {
           await ComportDebugSerivce.ArchiveAllExceptions('flasher')
           await this.loadItems()
           await alert('All exceptions were successfully archived!')
+        } catch (error) {
+          panic(error)
+        }
+        this.archiving = false
+      }
+    },
+    async deleteAllClick(){
+      if(await confirm('Delete all exceptions?')){
+        try {
+          this.archiving = true
+          await ComportDebugSerivce.DeleteAllExceptions('flasher')
+          await this.loadItems()
+          await alert('All exceptions were successfully deleted!')
         } catch (error) {
           panic(error)
         }
@@ -79,6 +101,10 @@ export default {
   <div class="exceptions-table">
 
     <Teleport to="#header-extra-buttons">
+      <v-btn v-if="activePage" @click="deleteAllClick" text color="white">
+        <v-icon>mdi-trash-can</v-icon>
+        &nbsp; DELETE ALL
+      </v-btn>
       <v-btn v-if="activePage" @click="archiveAllClick" text color="white">
         <v-icon>mdi-archive</v-icon>
         &nbsp; ARCHIVE ALL

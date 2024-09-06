@@ -34,4 +34,16 @@ export class ComportDebugSerivce{
         )
     }
 
+    static async DeleteException(appName, id){
+        const exceptionsColl = coll('exceptions', appName)
+        await exceptionsColl.deleteOne(
+            { _id: ObjectId(id) }
+        )
+    }
+
+    static async DeleteAllExceptions(appName){
+        const exceptionsColl = coll('exceptions', appName)
+        await exceptionsColl.deleteMany()
+    }
+
 }

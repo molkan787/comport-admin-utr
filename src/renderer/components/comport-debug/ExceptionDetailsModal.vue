@@ -16,11 +16,14 @@ export default {
         data: {},
         modalOpen: false,
         archiving: false,
-        loadingUserId: null
+        deleting: false,
+        loadingUserId: null,
+        options: {}
     }),
     methods: {
         async open(execption, options){
-            const { reload } = options || {}
+            this.options = options || {}
+            const { reload } = this.options
             let data = execption
             if(reload){
                 this.srcData = data
@@ -41,6 +44,21 @@ export default {
                 panic(error)
             }
             this.archiving = false
+        },
+        async deleteClick(){
+            if(await confirm('Delete this exception?')){
+                this.deleting = true
+                try {
+                    await ComportDebugSerivce.DeleteException('flasher', this.data._id)
+                    this.modalOpen = false
+                    if(typeof this.options.onDeleted === 'function'){
+                        this.options.onDeleted(this.data)
+                    }
+                } catch (error) {
+                    panic(error)
+                }
+                this.deleting = false
+            }
         },
         async userDetailsClick(item){
             try {
@@ -90,6 +108,10 @@ export default {
         </div>
     </div>
     <template #additionalButtons>
+        <v-btn color="red" text dark @click="deleteClick" :loading="deleting">
+            <v-icon v-if="data.Archived">mdi-trash-can-outline</v-icon>
+            Delete
+        </v-btn>
         <v-btn color="green" text dark @click="archiveClick" :loading="archiving" :disabled="data.Archived">
             <v-icon v-if="data.Archived">mdi-check-circle-outline</v-icon>
             {{ data.Archived ? 'Archived' : 'Archive' }}
