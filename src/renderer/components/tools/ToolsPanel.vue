@@ -33,6 +33,7 @@ import ExternalProgramsService, { EPActions } from '../../services/externalProgr
 import IKVMConverterTool from './IKVMConverterTool.vue'
 import DLLSeedKey from './DLLSeedKey.vue'
 import CRCHack from './CRCHack.vue'
+import ByteReturnTool from './ByteReturnTool.vue'
 
 // TODO: Replace repeatitive componenets with shared templates (tempalate for compression already exist)
 
@@ -46,6 +47,7 @@ export default {
         dialogopen: false,
         currentlyOpenTool: {},
         categoriesDef: [
+            { id: 'comport', title: 'Comport Tools' },
             { id: 'obd_labs_tools', title: 'OBD-Labs Tools' },
             { id: 'security_algos', title: 'Security Algorithms' },
             { id: 'compression', title: 'Compression' },
@@ -472,6 +474,11 @@ export default {
                 component: CRCHack,
                 category: 'file_tools'
             },
+            {
+                title: 'Byte Return',
+                component: ByteReturnTool,
+                category: 'comport'
+            },
         ]
     }),
     methods: {
@@ -488,7 +495,7 @@ export default {
                 const category = categoriesMap[tool.category] || categoriesMap['other']
                 category.tools.push(tool)
             }
-            return categories
+            return categories.filter(c => c.tools.length > 0)
         }
     },
     computed: {

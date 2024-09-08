@@ -190,6 +190,25 @@ export class RemoteToolsService{
     }
 
     /**
+     * @typedef BytesReturnParameters
+     * @prop {string} folderName
+     * @prop {string} fileName
+     * @prop {string} offset
+     * @prop {string} length
+     * 
+     * @param {BytesReturnParameters} options 
+     * @returns {Promise<string>}
+     */
+     static async BytesReturn(options){
+
+        const { data } = await axios.post(this._url(`byte-return`), null, {
+            params: options,
+            responseType: 'arraybuffer',
+        })
+        return data
+    }
+
+    /**
      * @private
      * @param {string} toolName 
      * @returns {string}
