@@ -60,7 +60,11 @@ export default {
                 }
             } catch (error) {
                 console.error(error)
-                alert(error.toString(), 'An error occured')
+                if(error.response && error.response.status === 404){
+                    alert('Filename or Folder name does not exist in the database.', 'File not found')
+                }else{
+                    alert(error.toString(), 'An error occured')
+                }
             }
             this.loading = false
         },

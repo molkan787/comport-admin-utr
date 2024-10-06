@@ -5,7 +5,7 @@
         <v-card-title class="headline">{{ title }}</v-card-title>
         <v-card-text>
             <div class="text-wrapper" :class="{ allowSelection }">{{ text }}</div>
-            <a @click="copyClick" class="copy-a-button" href="#">Copy</a>
+            <a v-if="showCopyButton" @click="copyClick" class="copy-a-button" href="#">Copy</a>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
