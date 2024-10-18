@@ -12,6 +12,7 @@ export default {
   data: () => ({
     isOpen: false,
     loading: false,
+    page: 1,
     items: [],
     callbacks: {
       resolve: null,
@@ -86,6 +87,7 @@ export default {
 <template>
   <div class="dynodb-shops-table">
     <v-data-table
+      :page.sync="page"
       :search="searchInput"
       :headers="headers"
       :items="items"
@@ -105,6 +107,13 @@ export default {
       <template v-slot:[`header.actions`]>
         <v-btn @click="editItem(null)" elevation="0" small>Add Shop</v-btn>
       </template>
+      
+      <template v-slot:[`footer.page-text`]>
+        <div style="display: flex;align-items: center;">
+          <span>Page:</span> <v-text-field v-model.number="page" dense hide-details style="width: 45px;font-size: 13px;padding-left: 0.5rem;" />
+        </div>
+      </template>
+
     </v-data-table>
   </div>
 </template>

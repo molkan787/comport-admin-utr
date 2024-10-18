@@ -1,6 +1,7 @@
 <template>
   <div class="customers-table">
     <v-data-table
+      :page.sync="page"
       :search="searchInput"
       :headers="headers"
       :items="items"
@@ -46,6 +47,12 @@
       <template v-slot:[`header.actions`]>
         <v-btn @click="editItem(null)" elevation="0" small>Add Customer</v-btn>
       </template>
+
+      <template v-slot:[`footer.page-text`]>
+        <div style="display: flex;align-items: center;">
+          <span>Page:</span> <v-text-field v-model.number="page" dense hide-details style="width: 45px;font-size: 13px;padding-left: 0.5rem;" />
+        </div>
+      </template>
     </v-data-table>
     <UserLogsModal :customer="userLogsCustomer" :open="!!userLogsCustomer" @closeRequest="userLogsCustomer = null" />
   </div>
@@ -79,6 +86,7 @@ export default {
   data() {
     return {
       loading: false,
+      page: 1,
       userLogsCustomer: null,
       editBtnLoading: null,
       sortBy: 'last_login',
@@ -419,6 +427,29 @@ export default {
     }else{
       this.loadItems();
     }
+    // for(let i = 0; i < 50; i++){
+    //   const customerData = {
+    //     "enabled_tunes": {
+    //       "stage_1": true,
+    //       "stage_2": true,
+    //       "burble": true,
+    //       "octane_91": true,
+    //       "octane_93": true
+    //     },
+    //     "last_flashing_ecu": {},
+    //     "last_flashing_tcu": {},
+    //     "last_flashing_cpc": {},
+    //     "status": "active",
+    //     "email": `test.customer${i + 1}@test.com`,
+    //     "vin": `${(i + 1) * 10}FG5G68FDSH6FD`,
+    //     "flash_enabled": "yes",
+    //     "load_shared_tunes": true,
+    //     "load_tcu_tunes": true,
+    //     "load_cpc_tunes": true,
+    //     "shopId": "6706cdf47266fe6500cf3b9c"
+    //   }
+    //   CustomerService.saveCustomer(customerData, true)
+    // }
   },
   filters: {
     capitalize(v){

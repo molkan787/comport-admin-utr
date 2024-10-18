@@ -15,6 +15,7 @@ export default {
   data() {
     return {
       loading: false,
+      page: 1,
       loadingCreate: false,
       loadingItem: null,
       headers: [
@@ -72,6 +73,7 @@ export default {
 <template>
   <div class="exceptions-table">
     <v-data-table
+      :page.sync="page"
       :search="searchInput"
       :headers="headers"
       :items="items"
@@ -94,6 +96,12 @@ export default {
 
       <template v-slot:[`header.actions`]>
         <v-btn @click="createRecording()" :loading="loadingCreate" elevation="0" small>Create Recording</v-btn>
+      </template>
+
+      <template v-slot:[`footer.page-text`]>
+        <div style="display: flex;align-items: center;">
+          <span>Page:</span> <v-text-field v-model.number="page" dense hide-details style="width: 45px;font-size: 13px;padding-left: 0.5rem;" />
+        </div>
       </template>
 
     </v-data-table>

@@ -50,6 +50,7 @@ export default {
   data() {
     return {
       loading: false,
+      page: 1,
       headers: [
         { text: "Shop", value: "shop" },
         { text: "Make", value: "make" },

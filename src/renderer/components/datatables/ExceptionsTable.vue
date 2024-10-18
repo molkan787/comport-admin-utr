@@ -20,6 +20,7 @@ export default {
   data() {
     return {
       loading: false,
+      page: 1,
       loadingItem: null,
       headers: [
         { text: "Exception Header", value: "ExceptionHeader" },
@@ -112,6 +113,7 @@ export default {
     </Teleport>
 
     <v-data-table
+      :page.sync="page"
       :search="searchInput"
       :headers="headers"
       :items="items"
@@ -134,6 +136,12 @@ export default {
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn @click="viewDetails(item)" elevation="0" small>View Details</v-btn>
+      </template>
+      
+      <template v-slot:[`footer.page-text`]>
+        <div style="display: flex;align-items: center;">
+          <span>Page:</span> <v-text-field v-model.number="page" dense hide-details style="width: 45px;font-size: 13px;padding-left: 0.5rem;" />
+        </div>
       </template>
 
     </v-data-table>

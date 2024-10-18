@@ -1,5 +1,6 @@
 <template>
   <v-data-table
+    :page.sync="page"
     :headers="headers"
     :items="items"
     :items-per-page="10"
@@ -20,6 +21,13 @@
     <template v-slot:[`header.actions`]>
       <v-btn @click="editItem(null)" elevation="0" small>Add Database</v-btn>
     </template>
+    
+    <template v-slot:[`footer.page-text`]>
+        <div style="display: flex;align-items: center;">
+          <span>Page:</span> <v-text-field v-model.number="page" dense hide-details style="width: 45px;font-size: 13px;padding-left: 0.5rem;" />
+        </div>
+      </template>
+
   </v-data-table>
 </template>
 
@@ -44,6 +52,7 @@ export default {
   },
   data() {
     return {
+      page: 1,
       loading: false,
       headers: [
         { text: "Name", value: "name" },
