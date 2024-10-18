@@ -1,5 +1,6 @@
 <template>
   <v-data-table
+    :page.sync="page"
     :search="searchInput"
     :headers="headers"
     :items="items"
@@ -24,6 +25,13 @@
     <template v-slot:[`header.actions`]>
       <v-btn @click="editItem(null)" elevation="0" small>Add User</v-btn>
     </template>
+
+    <template v-slot:[`footer.page-text`]>
+      <div style="display: flex;align-items: center;">
+        <span>Page:</span> <v-text-field v-model.number="page" dense hide-details style="width: 45px;font-size: 13px;padding-left: 0.5rem;" />
+      </div>
+    </template>
+
   </v-data-table>
 </template>
 
@@ -40,6 +48,7 @@ export default {
   data() {
     return {
       loading: false,
+      page: 1,
       sortBy: 'last_login',
       sortDesc: true,
       headers: [
